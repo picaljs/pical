@@ -1,0 +1,10 @@
+extends:
+  - "@joshuaavalon/eslint-config-typescript"
+env:
+  es6: true
+  node: true
+overrides:
+  - files:
+      - "*.d.ts"
+    rules:
+      "@typescript-eslint/no-unused-vars": "off"

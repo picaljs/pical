@@ -1,0 +1,58 @@
+{
+  "name": "@pical/pical",
+  "version": "1.0.0",
+  "description": "On-the-fly image manipulation",
+  "author": "Joshua Avalon",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "tsc",
+    "lint": "eslint --ext .ts src",
+    "publish": "semantic-release",
+    "predev": "npm run build",
+    "dev": "node lib/index.js"
+  },
+  "keywords": [
+    "pical"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/picaljs/pical.git"
+  },
+  "bin": {
+    "pical": "./lib/index.js"
+  },
+  "devDependencies": {
+    "@joshuaavalon/eslint-config-typescript": "^4.1.8",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@types/koa": "^2.11.6",
+    "@types/koa-pino-logger": "^3.0.0",
+    "@types/koa__router": "^8.0.3",
+    "@types/mime-types": "^2.1.0",
+    "@types/minio": "^7.0.6",
+    "@types/node": "^14.14.7",
+    "@types/qs": "^6.9.5",
+    "@types/sharp": "^0.26.1",
+    "eslint": "^7.13.0",
+    "prettier": "^2.1.2",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^17.2.2",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "@koa/router": "^10.0.0",
+    "dotenv": "^8.2.0",
+    "js-base64": "^3.6.0",
+    "koa": "^2.13.0",
+    "koa-pino-logger": "^3.0.0",
+    "mime-types": "^2.1.27",
+    "minio": "^7.0.16",
+    "qs": "^6.9.4",
+    "sharp": "^0.26.2"
+  }
+}
