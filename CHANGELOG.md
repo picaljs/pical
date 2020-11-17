@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/picaljs/pical/compare/v1.0.3...v1.0.4) (2020-11-17)
+
+
+### Bug Fixes
+
+* add libvips ([74a5d85](https://github.com/picaljs/pical/commit/74a5d85a74712577032606f041ce38869e8052dd))
+
 ## [1.0.3](https://github.com/picaljs/pical/compare/v1.0.2...v1.0.3) (2020-11-17)
 
 
