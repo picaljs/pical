@@ -51,8 +51,6 @@ RUN apk add --no-cache --virtual=build-dependencies curl tar && \
     curl -L "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" | tar xz -C / && \
     apk del --purge build-dependencies
 
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community vips-dev
-
 RUN npm install --production && \
     chmod +x /app/pical.sh
 
