@@ -13,8 +13,9 @@
     "build": "tsc",
     "lint": "eslint --ext .ts src",
     "publish": "semantic-release",
+    "start": "node lib/index.js",
     "predev": "npm run build",
-    "dev": "node lib/index.js"
+    "dev": "npm run start"
   },
   "keywords": [
     "pical"

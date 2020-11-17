@@ -1,12 +1,6 @@
 import { Middleware } from "koa";
 import qs from "qs";
 
-declare module "koa" {
-  interface ContextDelegatedRequest {
-    query: Record<string, unknown>;
-  }
-}
-
 export const qsMiddleware: Middleware = async (ctx, next) => {
   Object.defineProperties(ctx.request, {
     query: {

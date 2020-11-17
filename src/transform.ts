@@ -4,9 +4,15 @@ import { PassThrough } from "stream";
 import mime from "mime-types";
 import crypto from "crypto";
 import base64 from "js-base64";
+import { parseInteger } from "./func";
 
-const key = process.env.PICAL_KEY || "default";
-const salt = process.env.PICAL_SALT || "default";
+const {
+  PICAL_KEY: key = "default",
+  PICAL_SALT: salt = "default",
+  PICAL_CACHE: cacheTime
+} = process.env;
+
+const maxAge = parseInteger(cacheTime) || 604800;
 
 export const transformRouter = new Router<DefaultState, DefaultContext>();
 
@@ -57,15 +63,28 @@ transformRouter.get("image", "/:path+", async (ctx, next) => {
   const [file, format] = result;
   if (!validFormats.includes(format)) {
     ctx.throw("Invalid Format", 400);
-    return;
   }
-  if (!ctx.storage.exist(file)) {
+
+  if (!(await ctx.storage.exist(file))) {
     ctx.throw(404);
   }
+
+  const { etag, lastModified } = await ctx.storage.metadata(file);
+  ctx.etag = `W/"${etag}"`;
+  ctx.lastModified = lastModified;
+  const contentType = mime.lookup(`.${format}`) || "application/octet-stream";
+  ctx.set("Content-Type", contentType);
+  ctx.set("Cache-Control", `public, max-age=${maxAge}`);
+  ctx.status = 200;
+
+  if (ctx.fresh) {
+    ctx.status = 304;
+    await next();
+    return;
+  }
+
   ctx.body = (await ctx.storage.load(file))
     .pipe(ctx.transformImage({ format, query: ctx.query }))
     .pipe(new PassThrough());
-  const contentType = mime.lookup(`.${format}`) || "application/octet-stream";
-  ctx.response.set("Content-Type", contentType);
   await next();
 });

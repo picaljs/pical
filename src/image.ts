@@ -9,7 +9,7 @@ declare module "koa" {
 
 export interface TransformImageOption {
   format: string;
-  query: any;
+  query: Record<string, any>;
 }
 
 const allowMethods = [

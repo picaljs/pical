@@ -1,12 +1,18 @@
-import { BucketItemStat, Client, ClientOptions } from "minio";
+import { Client, ClientOptions } from "minio";
 import { Readable } from "stream";
-import fs from "fs";
-import fsp from "fs/promises";
+import { createReadStream, lstatSync } from "fs";
+import fs from "fs/promises";
 import path from "path";
+
+export interface Metadata {
+  etag: string;
+  lastModified: Date;
+}
 
 export interface Storage {
   load(key: string): Promise<Readable>;
   exist(key: string): Promise<boolean>;
+  metadata(key: string): Promise<Metadata>;
 }
 
 export class S3Storage implements Storage {
@@ -31,7 +37,7 @@ export class S3Storage implements Storage {
     }
   }
 
-  async metadata(key: string): Promise<BucketItemStat> {
+  async metadata(key: string): Promise<Metadata> {
     return this.client.statObject(this.bucket, key);
   }
 }
@@ -40,7 +46,7 @@ export class LocalStorage implements Storage {
   protected baseDir: string;
 
   constructor(baseDir: string) {
-    const stat = fs.lstatSync(baseDir);
+    const stat = lstatSync(baseDir);
     this.baseDir = baseDir;
     if (!stat.isDirectory()) {
       throw new Error(`${baseDir} is not a directory.`);
@@ -58,16 +64,27 @@ export class LocalStorage implements Storage {
 
   async load(key: string): Promise<Readable> {
     const filePath = this.resolveKey(key);
-    return fs.createReadStream(filePath);
+    return createReadStream(filePath);
   }
 
   async exist(key: string): Promise<boolean> {
     const filePath = this.resolveKey(key);
     try {
-      await fsp.lstat(filePath);
+      await fs.lstat(filePath);
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  async metadata(key: string): Promise<Metadata> {
+    const filePath = this.resolveKey(key);
+    const stat = await fs.lstat(filePath);
+    const mtime = stat.mtime.getTime().toString(16);
+    const size = stat.size.toString(16);
+    return {
+      etag: `${size}-${mtime}`,
+      lastModified: stat.mtime
+    };
   }
 }
