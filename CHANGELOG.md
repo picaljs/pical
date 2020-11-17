@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/picaljs/pical/compare/v1.0.5...v1.0.6) (2020-11-17)
+
+
+### Bug Fixes
+
+* remove arm ([15d9abb](https://github.com/picaljs/pical/commit/15d9abbf7c2d6bfd834fdcf2a9a28faffdb1e03e))
+
 ## [1.0.5](https://github.com/picaljs/pical/compare/v1.0.4...v1.0.5) (2020-11-17)
 
 
