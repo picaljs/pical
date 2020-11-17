@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/picaljs/pical/compare/v1.0.0...v1.0.1) (2020-11-17)
+
+
+### Bug Fixes
+
+* change Docker base image ([9d3a9d2](https://github.com/picaljs/pical/commit/9d3a9d2066eae881df2f5dbdb8c1147859f028f2))
+
 # 1.0.0 (2020-11-17)
 
 
