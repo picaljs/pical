@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/picaljs/pical/compare/v1.0.2...v1.0.3) (2020-11-17)
+
+
+### Bug Fixes
+
+* Debian commands ([1a0cfcb](https://github.com/picaljs/pical/commit/1a0cfcb1064ff72f21b0462918d1250d85557035))
+
 ## [1.0.2](https://github.com/picaljs/pical/compare/v1.0.1...v1.0.2) (2020-11-17)
 
 
