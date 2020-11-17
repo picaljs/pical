@@ -47,7 +47,7 @@ COPY docker/root/ /
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update -y && apt-get install -y curl && \
+RUN apt-get update -y && apt-get install -y curl libvips-dev && \
     if [[ "$TARGETARCH" == arm* ]]; then OVERLAY_ARCH=arm; else OVERLAY_ARCH="$TARGETARCH"; fi && \
     curl -L "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" | tar xz -C /
 
