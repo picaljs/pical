@@ -1,6 +1,4 @@
-
-
-ARG BASE_IMAGE=node:14-slim
+ARG BASE_IMAGE=node:14-alpine
 ARG OVERLAY_VERSION=v2.1.0.2
 
 FROM $BASE_IMAGE as builder
@@ -45,16 +43,21 @@ COPY --from=builder /app/lib /app/lib
 COPY package.json /app/
 COPY docker/root/ /
 
+RUN apk add --no-cache bash
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update -y && apt-get install -y curl libvips-dev && \
+RUN apk add --no-cache --virtual=build-dependencies curl tar && \
     if [[ "$TARGETARCH" == arm* ]]; then OVERLAY_ARCH=arm; else OVERLAY_ARCH="$TARGETARCH"; fi && \
-    curl -L "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" | tar xz -C /
+    curl -L "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" | tar xz -C / && \
+    apk del --purge build-dependencies
+
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community vips-dev
 
 RUN npm install --production && \
     chmod +x /app/pical.sh
 
-RUN useradd -u 1001 -U -d /config -s /bin/false pical && \
+RUN apk add --no-cache shadow && \
+    useradd -u 1001 -U -d /config -s /bin/false pical && \
     usermod -G users pical
 
 ENTRYPOINT ["/init"]
