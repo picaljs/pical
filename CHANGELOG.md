@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/picaljs/pical/compare/v1.0.4...v1.0.5) (2020-11-17)
+
+
+### Bug Fixes
+
+* revert back to alpine ([fb98711](https://github.com/picaljs/pical/commit/fb98711e6dded7a38585d83de845b345f5ac4d66))
+
 ## [1.0.4](https://github.com/picaljs/pical/compare/v1.0.3...v1.0.4) (2020-11-17)
 
 
