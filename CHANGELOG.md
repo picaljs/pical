@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/picaljs/pical/compare/v1.0.6...v1.0.7) (2020-11-17)
+
+
+### Bug Fixes
+
+* add missing service script ([050d259](https://github.com/picaljs/pical/commit/050d259cfb2792cf24190b7f1a0457be64970fb6))
+
 ## [1.0.6](https://github.com/picaljs/pical/compare/v1.0.5...v1.0.6) (2020-11-17)
 
 
