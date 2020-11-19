@@ -1,9 +1,9 @@
-import { DefaultContext, DefaultState } from "koa";
+import { DefaultContext, DefaultState, ParameterizedContext } from "koa";
 import Router from "@koa/router";
-import { PassThrough } from "stream";
 import mime from "mime-types";
-import crypto from "crypto";
-import base64 from "js-base64";
+import { generateSignature } from "@pical/signature";
+import fileType from "file-type";
+
 import { parseInteger } from "./func";
 
 const {
@@ -33,14 +33,35 @@ const validFormats = [
   "raw",
   "tiff",
   "webp",
-  "gif"
+  "gif",
+  "original"
 ];
 
-const generateSignature = (url: string): string => {
-  const hamc = crypto.createHmac("sha256", key);
-  hamc.update(salt);
-  hamc.update(url);
-  return hamc.digest().slice(0, 32).toString("utf-8");
+const transformOriginal = async (
+  ctx: ParameterizedContext<DefaultState, DefaultContext>,
+  file: string,
+  contentType?: string
+): Promise<void> => {
+  let resContentType: string;
+  if (!contentType) {
+    const result = await fileType.fromStream(await ctx.storage.load(file));
+    resContentType = result?.mime || "application/octet-stream";
+  } else {
+    resContentType = contentType;
+  }
+  ctx.set("Content-Type", resContentType);
+  ctx.body = await ctx.storage.load(file);
+};
+
+const transformImage = async (
+  ctx: ParameterizedContext<DefaultState, DefaultContext>,
+  format: string,
+  file: string
+): Promise<void> => {
+  const contentType = mime.lookup(`.${format}`) || "application/octet-stream";
+  ctx.set("Content-Type", contentType);
+  const original = await ctx.storage.load(file);
+  ctx.body = original.pipe(ctx.transformImage({ format, query: ctx.query }));
 };
 
 transformRouter.get("image", "/:path+", async (ctx, next) => {
@@ -48,8 +69,7 @@ transformRouter.get("image", "/:path+", async (ctx, next) => {
 
   if (signature) {
     const url = transformRouter.url("image", path, { query: ctx.querystring });
-    const digest = generateSignature(url);
-    const expected = base64.encode(digest, true);
+    const expected = generateSignature(url, key, salt);
     if (signature !== expected) {
       ctx.throw(403);
     }
@@ -69,11 +89,9 @@ transformRouter.get("image", "/:path+", async (ctx, next) => {
     ctx.throw(404);
   }
 
-  const { etag, lastModified } = await ctx.storage.metadata(file);
+  const { etag, lastModified, contentType } = await ctx.storage.metadata(file);
   ctx.etag = `W/"${etag}"`;
   ctx.lastModified = lastModified;
-  const contentType = mime.lookup(`.${format}`) || "application/octet-stream";
-  ctx.set("Content-Type", contentType);
   ctx.set("Cache-Control", `public, max-age=${maxAge}`);
   ctx.status = 200;
 
@@ -83,8 +101,11 @@ transformRouter.get("image", "/:path+", async (ctx, next) => {
     return;
   }
 
-  ctx.body = (await ctx.storage.load(file))
-    .pipe(ctx.transformImage({ format, query: ctx.query }))
-    .pipe(new PassThrough());
+  if (format === "original") {
+    await transformOriginal(ctx, file, contentType);
+  } else {
+    await transformImage(ctx, format, file);
+  }
+
   await next();
 });

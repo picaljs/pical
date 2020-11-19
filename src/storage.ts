@@ -7,6 +7,7 @@ import path from "path";
 export interface Metadata {
   etag: string;
   lastModified: Date;
+  contentType?: string;
 }
 
 export interface Storage {
@@ -38,7 +39,11 @@ export class S3Storage implements Storage {
   }
 
   async metadata(key: string): Promise<Metadata> {
-    return this.client.statObject(this.bucket, key);
+    const { etag, lastModified, metaData } = await this.client.statObject(
+      this.bucket,
+      key
+    );
+    return { etag, lastModified, contentType: metaData["Content-Type"] };
   }
 }
 
