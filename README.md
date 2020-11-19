@@ -10,20 +10,6 @@
 
 Pical is an on-the-fly image manipulation application. It uses [sharp](https://github.com/lovell/sharp) for image manipulation application.
 
-## Table of Content
-
-- [Getting Started](#getting-started)
-- [Guide](#guide)
-  - [Authentication](#authentication)
-    - [API Token](#api-token)
-    - [Global API Key](#global-api-key)
-    - [Zone ID](#zone-id)
-  - [Configuration](#configuration)
-    - [File](#file)
-    - [Environment Variables](#environment-variables)
-- [Migration](#migration)
-- [Frequently Asked Questions](#frequently-asked-questions)
-
 ## Getting Started
 
 ```bash
