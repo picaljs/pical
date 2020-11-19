@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/picaljs/pical/compare/v1.0.7...v1.1.0) (2020-11-19)
+
+
+### Features
+
+* add original support ([b53b8a7](https://github.com/picaljs/pical/commit/b53b8a71de3cb5b589147ad716904c89a10cd846))
+
 ## [1.0.7](https://github.com/picaljs/pical/compare/v1.0.6...v1.0.7) (2020-11-17)
 
 
