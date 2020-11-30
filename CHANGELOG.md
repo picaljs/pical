@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/picaljs/pical/compare/v1.1.0...v1.1.1) (2020-11-30)
+
+
+### Bug Fixes
+
+* update dependencies ([a02a2de](https://github.com/picaljs/pical/commit/a02a2de9691ca213f14aab9111baf25ba9dd97b6))
+
 # [1.1.0](https://github.com/picaljs/pical/compare/v1.0.7...v1.1.0) (2020-11-19)
 
 
